@@ -1,0 +1,32 @@
+﻿# DOMINIO ESTUDIO - MATRIZ DE ESTIMACION
+# Propuesta,Portal E-Commerce Artesanías y Reservas (Caso de Estudio ISER)
+# Cliente / Referencia,Artesanías del Valle S.A.S. (Ref: DS-PROP-2025-08)
+# Tecnologías,"React, Node.js, Express, PostgreSQL, Tailwind, Docker"
+# Fecha,2025-11-15
+# Reserva %,10%
+
+Componente,Categoria,Complejidad,Factor_f,Tarea_Tecnica,Perfil,Optimista_O,Probable_M,Pesimista_P,Horas_PERT_E,Horas_Ajustadas_H,Desviacion_sigma,Editado_Manualmente,Horas_Editadas,Justificacion,Trazabilidad_Origen
+Autenticación y Roles,General,media,1,"Diseño de esquema de usuarios, roles y permisos en base de datos",Backend,6,7,8,7,7,0.33,NO,,,"3 referencias históricas (rango: 6h - 8h, mediana: 7h)"
+Autenticación y Roles,General,media,1,"Implementación de endpoints JWT / OAuth2 (login, registro, recuperación)",Backend,14,16,18,16,16,0.67,NO,,,"3 referencias históricas (rango: 14h - 18h, mediana: 16h)"
+Autenticación y Roles,General,media,1,Vistas y formularios de autenticación responsivos con validaciones,Frontend,10,11,12,11,11,0.33,NO,,,"3 referencias históricas (rango: 10h - 12h, mediana: 11h)"
+Autenticación y Roles,General,media,1,"Pruebas de seguridad, sesiones y control de accesos RBAC",QA,6,7,8,7,7,0.33,NO,,,"2 referencias históricas (rango: 6h - 8h, mediana: 7h)"
+Panel Administrativo (Dashboard),General,media,1,Estructura base del layout administrativo con sidebar y breadcrumbs,Frontend,8,10,12,10,10,0.67,NO,,,"3 referencias históricas (rango: 8h - 12h, mediana: 10h)"
+Panel Administrativo (Dashboard),General,media,1,API de métricas y resumen de KPIs para dashboard,Backend,12,13.5,15,13.5,13.5,0.5,NO,,,"2 referencias históricas (rango: 12h - 15h, mediana: 13.5h)"
+Panel Administrativo (Dashboard),General,media,1,Visualización de gráficos analíticos e interactividad,Frontend,11,12.5,14,12.5,12.5,0.5,NO,,,"2 referencias históricas (rango: 11h - 14h, mediana: 12.5h)"
+Panel Administrativo (Dashboard),General,media,1,Pruebas de visualización y compatibilidad cross-browser,QA,5,5.5,6,5.5,5.5,0.17,NO,,,"2 referencias históricas (rango: 5h - 6h, mediana: 5.5h)"
+Gestión de Contenidos (CMS),General,baja,0.8,"CRUD de artículos, páginas y categorías con control de estados",Backend,12,14,16,14,11.2,0.67,NO,,,"2 referencias históricas (rango: 12h - 16h, mediana: 14h)"
+Gestión de Contenidos (CMS),General,baja,0.8,Editor de texto enriquecido (WYSIWYG) y carga de multimedia,Frontend,10,12,14,12,9.6,0.67,NO,,,"2 referencias históricas (rango: 10h - 14h, mediana: 12h)"
+Gestión de Contenidos (CMS),General,baja,0.8,Configuración de almacenamiento S3/Cloud Storage para activos,DevOps,6,7,8,7,5.6,0.33,NO,,,"2 referencias históricas (rango: 6h - 8h, mediana: 7h)"
+Gestión de Contenidos (CMS),General,baja,0.8,Validación de flujos de publicación y roles editoriales,QA,4.8,6,7.8,6.1,4.88,0.5,NO,,,1 referencia histórica (Portal Institucional ISER 2025: 6h)
+Integración con Pasarela de Pagos,General,alta,1.3,Integración con API de pasarela de pagos y creación de checkout seguro,Backend,18,20,24,20.33,26.43,1,NO,,,"3 referencias históricas (rango: 18h - 24h, mediana: 20h)"
+Integración con Pasarela de Pagos,General,alta,1.3,Webhook de confirmación de pagos y manejo asíncrono de órdenes,Backend,14,15,16,15,18,0.33,SI,18,Ajuste solicitado por personal senior debido a complejidad adicional en conciliación bancaria.,"2 referencias históricas (rango: 14h - 16h, mediana: 15h)"
+Integración con Pasarela de Pagos,General,alta,1.3,Pantallas de selección de método de pago y comprobante transaccional,Frontend,12,13,14,13,16.9,0.33,NO,,,"2 referencias históricas (rango: 12h - 14h, mediana: 13h)"
+Integración con Pasarela de Pagos,General,alta,1.3,"Pruebas en sandbox de pagos: aprobados, rechazados y timeouts",QA,10,11,12,11,14.3,0.33,NO,,,"2 referencias históricas (rango: 10h - 12h, mediana: 11h)"
+
+TOTALES
+Subtotal Horas Base,189.41
+Reserva Contingencia (10%),18.94
+TOTAL FINAL ESTIMADO,208.35
+Desviacion Estandar Total,2.08
+Rango Minimo (Total - sigma),206.27
+Rango Maximo (Total + sigma),210.43

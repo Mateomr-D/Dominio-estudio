@@ -1,0 +1,15 @@
+{
+  "name": "dominio-estudio-estimacion",
+  "version": "1.0.0",
+  "description": "Prototipo de Estimación de Tareas Técnicas para Propuestas a la Medida - Caso Dominio Estudio",
+  "scripts": {
+    "install:all": "npm --prefix backend install && npm --prefix frontend install",
+    "seed": "npm --prefix backend run seed",
+    "test": "npm --prefix backend test",
+    "dev:backend": "npm --prefix backend run dev",
+    "dev:frontend": "npm --prefix frontend run dev",
+    "build:frontend": "npm --prefix frontend run build"
+  },
+  "author": "Holnaver Dagua Cunda - Asesor: Elkin Rojas (ISER 2026)",
+  "license": "ISC"
+}
