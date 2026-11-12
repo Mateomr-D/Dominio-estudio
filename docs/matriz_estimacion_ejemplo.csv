@@ -1,32 +1,47 @@
 ﻿# DOMINIO ESTUDIO - MATRIZ DE ESTIMACION
-# Propuesta,Portal E-Commerce Artesanías y Reservas (Caso de Estudio ISER)
-# Cliente / Referencia,Artesanías del Valle S.A.S. (Ref: DS-PROP-2025-08)
-# Tecnologías,"React, Node.js, Express, PostgreSQL, Tailwind, Docker"
-# Fecha,2025-11-15
-# Reserva %,10%
+# Propuesta,App Educativa Móvil y Web (ICBF - OIM)
+# Cliente / Referencia,ICBF / Organización Internacional para las Migraciones (OIM)
+# Tecnologías,"React Native, Node.js, Express, PostgreSQL, Sincronización Offline, Docker"
+# Fecha,2024-08-20
+# Reserva %,8%
 
 Componente,Categoria,Complejidad,Factor_f,Tarea_Tecnica,Perfil,Optimista_O,Probable_M,Pesimista_P,Horas_PERT_E,Horas_Ajustadas_H,Desviacion_sigma,Editado_Manualmente,Horas_Editadas,Justificacion,Trazabilidad_Origen
-Autenticación y Roles,General,media,1,"Diseño de esquema de usuarios, roles y permisos en base de datos",Backend,6,7,8,7,7,0.33,NO,,,"3 referencias históricas (rango: 6h - 8h, mediana: 7h)"
-Autenticación y Roles,General,media,1,"Implementación de endpoints JWT / OAuth2 (login, registro, recuperación)",Backend,14,16,18,16,16,0.67,NO,,,"3 referencias históricas (rango: 14h - 18h, mediana: 16h)"
-Autenticación y Roles,General,media,1,Vistas y formularios de autenticación responsivos con validaciones,Frontend,10,11,12,11,11,0.33,NO,,,"3 referencias históricas (rango: 10h - 12h, mediana: 11h)"
-Autenticación y Roles,General,media,1,"Pruebas de seguridad, sesiones y control de accesos RBAC",QA,6,7,8,7,7,0.33,NO,,,"2 referencias históricas (rango: 6h - 8h, mediana: 7h)"
-Panel Administrativo (Dashboard),General,media,1,Estructura base del layout administrativo con sidebar y breadcrumbs,Frontend,8,10,12,10,10,0.67,NO,,,"3 referencias históricas (rango: 8h - 12h, mediana: 10h)"
-Panel Administrativo (Dashboard),General,media,1,API de métricas y resumen de KPIs para dashboard,Backend,12,13.5,15,13.5,13.5,0.5,NO,,,"2 referencias históricas (rango: 12h - 15h, mediana: 13.5h)"
-Panel Administrativo (Dashboard),General,media,1,Visualización de gráficos analíticos e interactividad,Frontend,11,12.5,14,12.5,12.5,0.5,NO,,,"2 referencias históricas (rango: 11h - 14h, mediana: 12.5h)"
-Panel Administrativo (Dashboard),General,media,1,Pruebas de visualización y compatibilidad cross-browser,QA,5,5.5,6,5.5,5.5,0.17,NO,,,"2 referencias históricas (rango: 5h - 6h, mediana: 5.5h)"
-Gestión de Contenidos (CMS),General,baja,0.8,"CRUD de artículos, páginas y categorías con control de estados",Backend,12,14,16,14,11.2,0.67,NO,,,"2 referencias históricas (rango: 12h - 16h, mediana: 14h)"
-Gestión de Contenidos (CMS),General,baja,0.8,Editor de texto enriquecido (WYSIWYG) y carga de multimedia,Frontend,10,12,14,12,9.6,0.67,NO,,,"2 referencias históricas (rango: 10h - 14h, mediana: 12h)"
-Gestión de Contenidos (CMS),General,baja,0.8,Configuración de almacenamiento S3/Cloud Storage para activos,DevOps,6,7,8,7,5.6,0.33,NO,,,"2 referencias históricas (rango: 6h - 8h, mediana: 7h)"
-Gestión de Contenidos (CMS),General,baja,0.8,Validación de flujos de publicación y roles editoriales,QA,4.8,6,7.8,6.1,4.88,0.5,NO,,,1 referencia histórica (Portal Institucional ISER 2025: 6h)
-Integración con Pasarela de Pagos,General,alta,1.3,Integración con API de pasarela de pagos y creación de checkout seguro,Backend,18,20,24,20.33,26.43,1,NO,,,"3 referencias históricas (rango: 18h - 24h, mediana: 20h)"
-Integración con Pasarela de Pagos,General,alta,1.3,Webhook de confirmación de pagos y manejo asíncrono de órdenes,Backend,14,15,16,15,18,0.33,SI,18,Ajuste solicitado por personal senior debido a complejidad adicional en conciliación bancaria.,"2 referencias históricas (rango: 14h - 16h, mediana: 15h)"
-Integración con Pasarela de Pagos,General,alta,1.3,Pantallas de selección de método de pago y comprobante transaccional,Frontend,12,13,14,13,16.9,0.33,NO,,,"2 referencias históricas (rango: 12h - 14h, mediana: 13h)"
-Integración con Pasarela de Pagos,General,alta,1.3,"Pruebas en sandbox de pagos: aprobados, rechazados y timeouts",QA,10,11,12,11,14.3,0.33,NO,,,"2 referencias históricas (rango: 10h - 12h, mediana: 11h)"
+"Gestión, Análisis y Planeación de la Solución",General,media,1,"Revisión de TDR, documentación técnica y reuniones iniciales con stakeholders",Backend,4,4,8,4.67,4.67,0.67,NO,,,"4 referencias históricas (rango: 4h - 8h, mediana: 4h)"
+"Gestión, Análisis y Planeación de la Solución",General,media,1,Levantamiento de requerimientos detallados y flujos funcionales,Backend,6,7,20,9,9,2.33,NO,,,"4 referencias históricas (rango: 6h - 20h, mediana: 7h)"
+"Gestión, Análisis y Planeación de la Solución",General,media,1,"Definición de backlog de tareas, cronograma y criterios de aceptación",QA,6,6,24,9,9,3,NO,,,"3 referencias históricas (rango: 6h - 24h, mediana: 6h)"
+"Diseño UI/UX, Wireframes y Prototipos",General,media,1,Diseño de wireframes para aplicaciones móvil y web,Diseño UI/UX,6,16,40,18.33,18.33,5.67,NO,,,"4 referencias históricas (rango: 6h - 40h, mediana: 16h)"
+"Diseño UI/UX, Wireframes y Prototipos",General,media,1,Construcción de prototipos navegables en alta fidelidad,Diseño UI/UX,12,14,16,14,14,0.67,NO,,,"2 referencias históricas (rango: 12h - 16h, mediana: 14h)"
+"Diseño UI/UX, Wireframes y Prototipos",General,media,1,"Diseño visual, guía de estilos y adaptación responsive",Frontend,12,24,80,31.33,31.33,11.33,NO,,,"3 referencias históricas (rango: 12h - 80h, mediana: 24h)"
+Arquitectura de Software y Modelado de Datos,General,media,1,"Diseño de arquitectura de software (App, API REST, Base de Datos)",Backend,2,4,10,4.67,4.67,1.33,NO,,,"4 referencias históricas (rango: 2h - 10h, mediana: 4h)"
+Arquitectura de Software y Modelado de Datos,General,media,1,Modelado relacional y creación de migraciones de base de datos,Backend,2,8,12,7.67,7.67,1.67,NO,,,"3 referencias históricas (rango: 2h - 12h, mediana: 8h)"
+Arquitectura de Software y Modelado de Datos,General,media,1,Documentación técnica de la solución y especificación de endpoints,Backend,2,14,24,13.67,13.67,3.67,NO,,,"4 referencias históricas (rango: 2h - 24h, mediana: 14h)"
+"Configuración Básica, Repositorios y Entornos (DevOps)",General,media,1,"Creación de repositorios de código, branching y control de versiones",DevOps,1,4,4,3.5,3.5,0.5,NO,,,"3 referencias históricas (rango: 1h - 4h, mediana: 4h)"
+"Configuración Básica, Repositorios y Entornos (DevOps)",General,media,1,Preparación y montaje de entornos de desarrollo local y ambiente de QA,DevOps,1,4,16,5.5,5.5,2.5,NO,,,"4 referencias históricas (rango: 1h - 16h, mediana: 4h)"
+"Configuración Básica, Repositorios y Entornos (DevOps)",General,media,1,"Instalación y configuración de módulos, dependencias y librerías base",Backend,6,8,20,9.67,9.67,2.33,NO,,,"3 referencias históricas (rango: 6h - 20h, mediana: 8h)"
+"Autenticación, Usuarios y Gestión de Permisos",General,media,1,"Configuración de backend para autenticación, registro y recuperación",Backend,2,14,24,13.67,13.67,3.67,NO,,,"3 referencias históricas (rango: 2h - 24h, mediana: 14h)"
+"Autenticación, Usuarios y Gestión de Permisos",General,media,1,Gestión de roles jerárquicos y control de accesos (RBAC),Backend,12,26,40,26,26,4.67,NO,,,"2 referencias históricas (rango: 12h - 40h, mediana: 26h)"
+"Autenticación, Usuarios y Gestión de Permisos",General,media,1,"Vistas frontend de registro, inicio de sesión y gestión de perfil",Frontend,12,18,24,18,18,2,NO,,,"2 referencias históricas (rango: 12h - 24h, mediana: 18h)"
+"Autenticación, Usuarios y Gestión de Permisos",General,media,1,"Registro, auditoría y trazabilidad de actividad del sistema",Backend,12.8,16,20.8,16.27,16.27,1.33,NO,,,1 referencia histórica (App Educativa ICBF - OIM: 16h)
+"E-Learning, Chatbots IA y Automatización Educativa",General,alta,1.3,Configuración de WhatsApp Business API e integración con n8n,DevOps,12.8,16,20.8,16.27,21.15,1.33,NO,,,1 referencia histórica (Chatbot Educativo en WhatsApp (n8n + OpenAI): 16h)
+"E-Learning, Chatbots IA y Automatización Educativa",General,alta,1.3,Conexión con OpenAI y configuración de contexto para Agente IA,Backend,16,20,26,20.33,26.43,1.67,NO,,,1 referencia histórica (Chatbot Educativo en WhatsApp (n8n + OpenAI): 20h)
+"E-Learning, Chatbots IA y Automatización Educativa",General,alta,1.3,Diseño instruccional y producción de paquetes SCORM,Diseño UI/UX,48,60,78,61,79.3,5,NO,,,1 referencia histórica (Chatbot Educativo en WhatsApp (n8n + OpenAI): 60h)
+"E-Learning, Chatbots IA y Automatización Educativa",General,alta,1.3,Implementación de flujos conversacionales interactivos en n8n,Backend,43.2,54,70.2,54.9,71.37,4.5,NO,,,1 referencia histórica (Chatbot Educativo en WhatsApp (n8n + OpenAI): 54h)
+"E-Learning, Chatbots IA y Automatización Educativa",General,alta,1.3,"Módulos de evaluación formativa, emisión de insignias y certificados digitales",Backend,24,27,30,27,35.1,1,NO,,,"2 referencias históricas (rango: 24h - 30h, mediana: 27h)"
+"E-Learning, Chatbots IA y Automatización Educativa",General,alta,1.3,Sincronización de datos offline/online y almacenamiento local,Frontend,19.2,24,31.2,24.4,28,2,SI,28,Ajuste aprobado por personal senior debido a requerimiento estricto de cifrado local en SQLite.,1 referencia histórica (App Educativa ICBF - OIM: 24h)
+"Aseguramiento de Calidad, Pruebas y Seguridad (QA)",General,media,1,Diseño y estructuración del plan maestro de pruebas,QA,8,8,16,9.33,9.33,1.33,NO,,,"3 referencias históricas (rango: 8h - 16h, mediana: 8h)"
+"Aseguramiento de Calidad, Pruebas y Seguridad (QA)",General,media,1,Ejecución de pruebas funcionales y validación de flujos de usuario,QA,8,10,20,11.33,11.33,2,NO,,,"3 referencias históricas (rango: 8h - 20h, mediana: 10h)"
+"Aseguramiento de Calidad, Pruebas y Seguridad (QA)",General,media,1,"Pruebas de carga, estrés y rendimiento concurrente",QA,6,7,8,7,7,0.33,NO,,,"2 referencias históricas (rango: 6h - 8h, mediana: 7h)"
+"Aseguramiento de Calidad, Pruebas y Seguridad (QA)",General,media,1,"Escaneo de vulnerabilidades, pruebas de seguridad y corrección de incidencias",QA,8,16,24,16,16,2.67,NO,,,"2 referencias históricas (rango: 8h - 24h, mediana: 16h)"
+"Aseguramiento de Calidad, Pruebas y Seguridad (QA)",General,media,1,"Ajustes, corrección de defectos y certificación de pruebas",Backend,28,30,32,30,30,0.67,NO,,,"3 referencias históricas (rango: 28h - 32h, mediana: 30h)"
+"Despliegue, Publicación y Capacitación",General,media,1,Configuración y despliegue del sistema en servidor de producción,DevOps,4,4,4,4,4,0,NO,,,"3 referencias históricas (rango: 4h - 4h, mediana: 4h)"
+"Despliegue, Publicación y Capacitación",General,media,1,Compilación multiplataforma y publicación en tiendas (Play Store / App Store),DevOps,9.6,12,15.6,12.2,12.2,1,NO,,,1 referencia histórica (App Educativa ICBF - OIM: 12h)
+"Despliegue, Publicación y Capacitación",General,media,1,Elaboración de manual de usuario y guía de administración,Backend,12,14,24,15.33,15.33,2,NO,,,"4 referencias históricas (rango: 12h - 24h, mediana: 14h)"
+"Despliegue, Publicación y Capacitación",General,media,1,Sesiones de capacitación técnica y transferencia de código fuente,Backend,6,8,10,8,8,0.67,NO,,,"3 referencias históricas (rango: 6h - 10h, mediana: 8h)"
 
 TOTALES
-Subtotal Horas Base,189.41
-Reserva Contingencia (10%),18.94
-TOTAL FINAL ESTIMADO,208.35
-Desviacion Estandar Total,2.08
-Rango Minimo (Total - sigma),206.27
-Rango Maximo (Total + sigma),210.43
+Subtotal Horas Base,579.49
+Reserva Contingencia (8%),46.36
+TOTAL FINAL ESTIMADO,625.85
+Desviacion Estandar Total,17.9
+Rango Minimo (Total - sigma),607.95
+Rango Maximo (Total + sigma),643.75

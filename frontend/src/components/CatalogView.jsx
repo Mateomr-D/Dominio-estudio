@@ -14,7 +14,10 @@ import {
   CheckCircle2,
   AlertCircle,
   Tag,
-  ShieldCheck
+  ShieldCheck,
+  Sparkles,
+  Search,
+  FolderOpen
 } from 'lucide-react';
 
 export default function CatalogView() {
@@ -26,6 +29,18 @@ export default function CatalogView() {
   const [expandedCompId, setExpandedCompId] = useState(null);
   const [componentDetail, setComponentDetail] = useState(null);
   const [detailLoading, setDetailLoading] = useState(false);
+
+  // Proyectos históricos para el selector (RF-03)
+  const [historicalProjects, setHistoricalProjects] = useState([
+    'App Educativa ICBF - OIM',
+    'Plataforma Green List (IUCN - Drupal)',
+    'Chatbot Educativo en WhatsApp (n8n + OpenAI)',
+    'Tasking Propuesta Famisanar (Drupal)',
+    'Plataforma Entidades Financieras',
+    'Portal E-Commerce Artesanías 2024',
+    'Portal Institucional ISER 2025',
+    'App Web Reservas Coworking 2025'
+  ]);
 
   // Modals
   const [showCompModal, setShowCompModal] = useState(false);
@@ -39,13 +54,26 @@ export default function CatalogView() {
   const [showRefModal, setShowRefModal] = useState(false);
   const [targetTaskId, setTargetTaskId] = useState(null);
   const [refForm, setRefForm] = useState({ proyecto_origen: '', horas: '', tipo: 'real', notas: '' });
+  const [customProjectInput, setCustomProjectInput] = useState(false);
 
   const [errorMsg, setErrorMsg] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
 
   useEffect(() => {
     loadComponents();
+    loadHistoricalProjects();
   }, [includeInactive]);
+
+  async function loadHistoricalProjects() {
+    try {
+      const res = await api.getHistoricalProjects();
+      if (res.data && res.data.length > 0) {
+        setHistoricalProjects(res.data);
+      }
+    } catch (err) {
+      console.warn('No se pudo cargar la lista remota de proyectos históricos, usando lista precargada', err);
+    }
+  }
 
   async function loadComponents() {
     setLoading(true);
@@ -95,7 +123,6 @@ export default function CatalogView() {
     }
   }
 
-  // Guardar o editar componente (RF-01)
   async function handleSaveComponent(e) {
     e.preventDefault();
     try {
@@ -114,7 +141,6 @@ export default function CatalogView() {
     }
   }
 
-  // Guardar nueva tarea técnica (RF-02)
   async function handleSaveTask(e) {
     e.preventDefault();
     try {
@@ -129,7 +155,6 @@ export default function CatalogView() {
     }
   }
 
-  // Eliminar tarea
   async function handleDeleteTask(taskId) {
     if (!confirm('¿Confirma eliminar esta tarea técnica del catálogo?')) return;
     try {
@@ -142,7 +167,6 @@ export default function CatalogView() {
     }
   }
 
-  // Registrar referencia histórica de horas (RF-03)
   async function handleSaveReference(e) {
     e.preventDefault();
     try {
@@ -155,13 +179,14 @@ export default function CatalogView() {
       setSuccessMsg('Referencia histórica de horas registrada correctamente');
       setShowRefModal(false);
       setRefForm({ proyecto_origen: '', horas: '', tipo: 'real', notas: '' });
+      setCustomProjectInput(false);
       if (expandedCompId) loadComponentDetail(expandedCompId);
+      loadHistoricalProjects();
     } catch (err) {
       setErrorMsg(err.message);
     }
   }
 
-  // Eliminar referencia de horas
   async function handleDeleteReference(refId) {
     if (!confirm('¿Desea eliminar esta referencia histórica?')) return;
     try {
@@ -205,17 +230,20 @@ export default function CatalogView() {
         </div>
       )}
 
-      {/* Encabezado del catálogo */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-slate-200 shadow-xs">
+      {/* Encabezado del catálogo con estilo corporativo Dominio Estudio */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-slate-200 shadow-xs border-l-4 border-l-[#2b003e]">
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Catálogo de Componentes</h1>
-            <span className="text-xs bg-slate-100 text-slate-700 font-semibold px-2.5 py-1 rounded-full">
+            <h1 className="text-2xl font-extrabold text-[#2b003e] tracking-tight">Catálogo de Componentes</h1>
+            <span className="text-xs bg-purple-100 text-[#2b003e] font-bold px-2.5 py-1 rounded-full border border-purple-200">
               RF-01 a RF-03
             </span>
+            <span className="text-xs bg-emerald-100 text-emerald-800 font-semibold px-2 py-0.5 rounded-full">
+              Base Histórica Real
+            </span>
           </div>
-          <p className="text-sm text-slate-500 mt-1">
-            Componentes estandarizados y tareas técnicas con horas de referencia O, M y P tomadas de proyectos anteriores de Dominio Estudio.
+          <p className="text-sm text-slate-600 mt-1">
+            Componentes estandarizados y tareas técnicas nutridas con las estimaciones y proyectos históricos de <strong>Dominio Estudio</strong> (ICBF, Green List, Chatbot WhatsApp, Famisanar, etc.).
           </p>
         </div>
 
@@ -223,12 +251,12 @@ export default function CatalogView() {
           <button
             onClick={() => {
               setEditingComp(null);
-              setCompForm({ nombre: '', descripcion: '', categoria: 'General', activo: 1 });
+              setCompForm({ nombre: '', descripcion: '', categoria: 'E-Learning y Contenidos', activo: 1 });
               setShowCompModal(true);
             }}
-            className="flex items-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-semibold shadow-sm shadow-blue-500/20 transition-all"
+            className="flex items-center gap-2 px-4 py-2.5 bg-[#2b003e] hover:bg-[#3d0059] text-white rounded-xl text-sm font-bold shadow-md shadow-purple-900/10 transition-all hover:scale-[1.02]"
           >
-            <Plus className="w-4 h-4" />
+            <Plus className="w-4 h-4 text-[#5dc628]" />
             <span>Nuevo Componente</span>
           </button>
         </div>
@@ -239,16 +267,16 @@ export default function CatalogView() {
         <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
           <input
             type="text"
-            placeholder="Buscar por nombre o descripción..."
+            placeholder="Buscar componentes o tareas..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="px-3.5 py-2 text-sm border border-slate-300 rounded-lg w-full sm:w-64 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="px-3.5 py-2 text-sm border border-slate-300 rounded-lg w-full sm:w-64 focus:outline-none focus:ring-2 focus:ring-[#2b003e]"
           />
 
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
-            className="px-3 py-2 text-sm border border-slate-300 rounded-lg bg-white text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="px-3 py-2 text-sm border border-slate-300 rounded-lg bg-white text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#2b003e]"
           >
             {categories.map((cat) => (
               <option key={cat} value={cat}>
@@ -258,12 +286,12 @@ export default function CatalogView() {
           </select>
         </div>
 
-        <label className="flex items-center gap-2 text-xs font-medium text-slate-600 cursor-pointer self-start sm:self-auto">
+        <label className="flex items-center gap-2 text-xs font-semibold text-slate-600 cursor-pointer self-start sm:self-auto">
           <input
             type="checkbox"
             checked={includeInactive}
             onChange={(e) => setIncludeInactive(e.target.checked)}
-            className="rounded text-blue-600 focus:ring-blue-500"
+            className="rounded text-[#2b003e] focus:ring-[#2b003e]"
           />
           Mostrar componentes inactivos
         </label>
@@ -272,7 +300,7 @@ export default function CatalogView() {
       {/* Lista de Componentes */}
       {loading ? (
         <div className="p-12 text-center text-slate-500 bg-white rounded-2xl border border-slate-200">
-          Cargando catálogo de componentes...
+          Cargando catálogo de componentes de Dominio Estudio...
         </div>
       ) : filteredComponents.length === 0 ? (
         <div className="p-12 text-center text-slate-500 bg-white rounded-2xl border border-slate-200">
@@ -286,7 +314,9 @@ export default function CatalogView() {
               <div
                 key={comp.id}
                 className={`bg-white rounded-2xl border transition-all ${
-                  isExpanded ? 'border-blue-400 shadow-md ring-1 ring-blue-100' : 'border-slate-200 hover:border-slate-300 shadow-xs'
+                  isExpanded
+                    ? 'border-[#2b003e] shadow-md ring-1 ring-purple-100'
+                    : 'border-slate-200 hover:border-purple-300 shadow-xs'
                 } ${!comp.activo ? 'opacity-60 bg-slate-50' : ''}`}
               >
                 {/* Cabecera del Componente */}
@@ -296,12 +326,16 @@ export default function CatalogView() {
                 >
                   <div className="flex items-start gap-3">
                     <div className="mt-1 text-slate-400">
-                      {isExpanded ? <ChevronDown className="w-5 h-5 text-blue-600" /> : <ChevronRight className="w-5 h-5" />}
+                      {isExpanded ? (
+                        <ChevronDown className="w-5 h-5 text-[#2b003e]" />
+                      ) : (
+                        <ChevronRight className="w-5 h-5 text-slate-400" />
+                      )}
                     </div>
                     <div>
                       <div className="flex flex-wrap items-center gap-2">
                         <span className="font-bold text-base text-slate-900">{comp.nombre}</span>
-                        <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700">
+                        <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-purple-50 text-[#2b003e] border border-purple-200">
                           {comp.categoria}
                         </span>
                         {!comp.activo && (
@@ -315,7 +349,7 @@ export default function CatalogView() {
                   </div>
 
                   <div className="flex items-center gap-3 self-end sm:self-auto" onClick={(e) => e.stopPropagation()}>
-                    <span className="text-xs font-medium text-slate-600 bg-slate-100 px-2.5 py-1 rounded-lg">
+                    <span className="text-xs font-bold text-slate-700 bg-slate-100 px-2.5 py-1 rounded-lg">
                       {comp.total_tareas} {comp.total_tareas === 1 ? 'tarea técnica' : 'tareas técnicas'}
                     </span>
 
@@ -331,7 +365,7 @@ export default function CatalogView() {
                         setShowCompModal(true);
                       }}
                       title="Editar componente"
-                      className="p-2 text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                      className="p-2 text-slate-500 hover:text-[#2b003e] hover:bg-purple-50 rounded-lg transition-colors"
                     >
                       <Edit2 className="w-4 h-4" />
                     </button>
@@ -341,7 +375,7 @@ export default function CatalogView() {
                       title={comp.activo ? 'Desactivar componente (RF-01)' : 'Activar componente (RF-01)'}
                       className={`p-2 rounded-lg transition-colors ${
                         comp.activo
-                          ? 'text-emerald-600 hover:bg-emerald-50'
+                          ? 'text-[#5dc628] hover:bg-emerald-50'
                           : 'text-slate-400 hover:bg-slate-200'
                       }`}
                     >
@@ -352,11 +386,11 @@ export default function CatalogView() {
 
                 {/* Detalle Desplegable con Tareas y Referencias Históricas (RF-02 y RF-03) */}
                 {isExpanded && (
-                  <div className="border-t border-slate-100 bg-slate-50/60 p-5 rounded-b-2xl space-y-4">
+                  <div className="border-t border-slate-100 bg-slate-50/70 p-5 rounded-b-2xl space-y-4">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <Database className="w-4 h-4 text-blue-600" />
-                        <h3 className="text-sm font-bold text-slate-800">
+                        <Database className="w-4 h-4 text-[#2b003e]" />
+                        <h3 className="text-sm font-bold text-slate-900">
                           Tareas Técnicas y Horas de Referencia (PERT Cohn 2005)
                         </h3>
                       </div>
@@ -365,9 +399,9 @@ export default function CatalogView() {
                           setTargetCompId(comp.id);
                           setShowTaskModal(true);
                         }}
-                        className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-semibold shadow-xs"
+                        className="flex items-center gap-1.5 px-3 py-1.5 bg-[#2b003e] hover:bg-[#3d0059] text-white rounded-lg text-xs font-bold shadow-xs"
                       >
-                        <Plus className="w-3.5 h-3.5" />
+                        <Plus className="w-3.5 h-3.5 text-[#5dc628]" />
                         <span>Agregar Tarea Técnica</span>
                       </button>
                     </div>
@@ -391,7 +425,7 @@ export default function CatalogView() {
                                 <div>
                                   <div className="flex items-center gap-2">
                                     <span className="font-semibold text-sm text-slate-900">{tarea.nombre}</span>
-                                    <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200">
+                                    <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-purple-50 text-[#2b003e] border border-purple-200">
                                       {tarea.perfil}
                                     </span>
                                   </div>
@@ -404,12 +438,19 @@ export default function CatalogView() {
                                   <button
                                     onClick={() => {
                                       setTargetTaskId(tarea.id);
+                                      setRefForm({
+                                        proyecto_origen: historicalProjects[0] || 'App Educativa ICBF - OIM',
+                                        horas: '',
+                                        tipo: 'real',
+                                        notas: ''
+                                      });
+                                      setCustomProjectInput(false);
                                       setShowRefModal(true);
                                     }}
-                                    className="flex items-center gap-1 px-2.5 py-1 text-xs font-semibold text-slate-700 hover:text-blue-700 bg-slate-100 hover:bg-blue-50 rounded-lg transition-colors border border-slate-200"
-                                    title="Añadir horas de referencia de un proyecto anterior (RF-03)"
+                                    className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-[#2b003e] hover:bg-purple-100/60 bg-purple-50 rounded-lg transition-colors border border-purple-200"
+                                    title="Añadir horas de referencia de un proyecto anterior de Dominio Estudio (RF-03)"
                                   >
-                                    <History className="w-3.5 h-3.5 text-blue-600" />
+                                    <History className="w-3.5 h-3.5 text-[#5dc628]" />
                                     <span>+ Referencia Histórica</span>
                                   </button>
 
@@ -438,8 +479,8 @@ export default function CatalogView() {
                                   <span className="font-semibold text-slate-800">{base.P} hrs</span>
                                 </div>
                                 <div>
-                                  <span className="text-blue-600 block text-[10px] uppercase font-bold">Esperada (E)</span>
-                                  <span className="font-bold text-blue-700 text-sm">{base.horasEsperadas} hrs</span>
+                                  <span className="text-[#2b003e] block text-[10px] uppercase font-bold">Esperada (E)</span>
+                                  <span className="font-black text-[#2b003e] text-sm">{base.horasEsperadas} hrs</span>
                                 </div>
                                 <div>
                                   <span className="text-slate-400 block text-[10px] uppercase font-bold">Desviación (σ)</span>
@@ -449,9 +490,9 @@ export default function CatalogView() {
 
                               {/* Trazabilidad: Proyectos históricos de origen (RF-03) */}
                               <div className="text-xs pt-1">
-                                <span className="font-semibold text-slate-600 flex items-center gap-1 mb-1.5">
-                                  <Info className="w-3.5 h-3.5 text-slate-400" />
-                                  Trazabilidad de datos históricos ({tarea.referencias.length} registros):
+                                <span className="font-bold text-slate-700 flex items-center gap-1 mb-1.5">
+                                  <Info className="w-3.5 h-3.5 text-[#5dc628]" />
+                                  Proyectos de referencia de Dominio Estudio ({tarea.referencias.length} registrados):
                                 </span>
 
                                 {tarea.referencias.length === 0 ? (
@@ -463,10 +504,10 @@ export default function CatalogView() {
                                     {tarea.referencias.map((ref) => (
                                       <div
                                         key={ref.id}
-                                        className="inline-flex items-center gap-1.5 bg-white border border-slate-200 px-2.5 py-1 rounded-md text-[11px]"
+                                        className="inline-flex items-center gap-1.5 bg-white border border-slate-200 px-2.5 py-1 rounded-md text-[11px] shadow-2xs"
                                       >
-                                        <span className="font-medium text-slate-800">{ref.proyecto_origen}:</span>
-                                        <span className="font-bold text-blue-600">{ref.horas}h</span>
+                                        <span className="font-semibold text-slate-800">{ref.proyecto_origen}:</span>
+                                        <span className="font-bold text-[#2b003e]">{ref.horas}h</span>
                                         <span
                                           className={`px-1.5 py-0.2 rounded text-[9px] font-bold uppercase ${
                                             ref.tipo === 'real'
@@ -503,13 +544,13 @@ export default function CatalogView() {
 
       {/* Modal Crear/Editar Componente (RF-01) */}
       {showCompModal && (
-        <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4 z-50">
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl border border-slate-200">
-            <h3 className="text-lg font-bold text-slate-900 mb-1">
+            <h3 className="text-lg font-bold text-[#2b003e] mb-1">
               {editingComp ? 'Editar Componente del Catálogo' : 'Nuevo Componente para el Catálogo'}
             </h3>
             <p className="text-xs text-slate-500 mb-4">
-              Defina el módulo reutilizable que integrará las soluciones a la medida.
+              Defina el módulo reutilizable que integrará las soluciones a la medida de Dominio Estudio.
             </p>
 
             <form onSubmit={handleSaveComponent} className="space-y-4">
@@ -520,21 +561,27 @@ export default function CatalogView() {
                   required
                   value={compForm.nombre}
                   onChange={(e) => setCompForm({ ...compForm, nombre: e.target.value })}
-                  placeholder="Ej: Integración Pasarela de Pagos"
-                  className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  placeholder="Ej: Chatbot Educativo con IA"
+                  className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-[#2b003e] focus:outline-none"
                 />
               </div>
 
               <div>
                 <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Categoría *</label>
-                <input
-                  type="text"
-                  required
+                <select
                   value={compForm.categoria}
                   onChange={(e) => setCompForm({ ...compForm, categoria: e.target.value })}
-                  placeholder="Ej: Finanzas, Seguridad, Contenido..."
-                  className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                />
+                  className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg bg-white focus:ring-2 focus:ring-[#2b003e] focus:outline-none"
+                >
+                  <option value="E-Learning y Contenidos">E-Learning y Contenidos</option>
+                  <option value="Gestión y Análisis">Gestión y Análisis</option>
+                  <option value="Diseño y Experiencia">Diseño y Experiencia</option>
+                  <option value="Arquitectura e Infraestructura">Arquitectura e Infraestructura</option>
+                  <option value="Seguridad y Usuarios">Seguridad y Usuarios</option>
+                  <option value="Plataformas Transaccionales">Plataformas Transaccionales</option>
+                  <option value="Calidad y Seguridad">Calidad y Seguridad</option>
+                  <option value="Despliegue y Capacitación">Despliegue y Capacitación</option>
+                </select>
               </div>
 
               <div>
@@ -544,7 +591,7 @@ export default function CatalogView() {
                   value={compForm.descripcion}
                   onChange={(e) => setCompForm({ ...compForm, descripcion: e.target.value })}
                   placeholder="Alcance técnico del componente..."
-                  className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-[#2b003e] focus:outline-none"
                 />
               </div>
 
@@ -558,7 +605,7 @@ export default function CatalogView() {
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold shadow-xs"
+                  className="px-4 py-2 text-sm bg-[#2b003e] hover:bg-[#3d0059] text-white rounded-lg font-bold shadow-xs"
                 >
                   Guardar Componente
                 </button>
@@ -570,9 +617,9 @@ export default function CatalogView() {
 
       {/* Modal Crear Tarea Técnica (RF-02) */}
       {showTaskModal && (
-        <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4 z-50">
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl border border-slate-200">
-            <h3 className="text-lg font-bold text-slate-900 mb-1">Registrar Tarea Técnica</h3>
+            <h3 className="text-lg font-bold text-[#2b003e] mb-1">Registrar Tarea Técnica</h3>
             <p className="text-xs text-slate-500 mb-4">
               Descompone el componente en una actividad técnica atómica con perfil asignado.
             </p>
@@ -585,8 +632,8 @@ export default function CatalogView() {
                   required
                   value={taskForm.nombre}
                   onChange={(e) => setTaskForm({ ...taskForm, nombre: e.target.value })}
-                  placeholder="Ej: Implementación de Webhook de confirmación"
-                  className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  placeholder="Ej: Integración de WhatsApp Business API"
+                  className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-[#2b003e] focus:outline-none"
                 />
               </div>
 
@@ -595,7 +642,7 @@ export default function CatalogView() {
                 <select
                   value={taskForm.perfil}
                   onChange={(e) => setTaskForm({ ...taskForm, perfil: e.target.value })}
-                  className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg bg-white focus:ring-2 focus:ring-[#2b003e] focus:outline-none font-medium"
                 >
                   <option value="Backend">Backend</option>
                   <option value="Frontend">Frontend</option>
@@ -612,7 +659,7 @@ export default function CatalogView() {
                   value={taskForm.descripcion}
                   onChange={(e) => setTaskForm({ ...taskForm, descripcion: e.target.value })}
                   placeholder="Criterios técnicos de aceptación de la tarea..."
-                  className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-[#2b003e] focus:outline-none"
                 />
               </div>
 
@@ -626,7 +673,7 @@ export default function CatalogView() {
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold shadow-xs"
+                  className="px-4 py-2 text-sm bg-[#2b003e] hover:bg-[#3d0059] text-white rounded-lg font-bold shadow-xs"
                 >
                   Guardar Tarea
                 </button>
@@ -636,33 +683,106 @@ export default function CatalogView() {
         </div>
       )}
 
-      {/* Modal Registrar Referencia Histórica de Horas (RF-03) */}
+      {/* MODAL: Añadir Referencia Histórica (RF-03) con selector desplegable de PROYECTO DE ORIGEN (Imagen 4 / menu.png) */}
       {showRefModal && (
-        <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl border border-slate-200">
-            <h3 className="text-lg font-bold text-slate-900 mb-1">Añadir Referencia Histórica (RF-03)</h3>
-            <p className="text-xs text-slate-500 mb-4">
-              Alimenta los valores paramétricos (O, M, P) con horas de proyectos anteriores de Dominio Estudio.
-            </p>
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 z-50 animate-in fade-in duration-200">
+          <div className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-7 shadow-2xl border border-slate-200 space-y-4">
+            <div>
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-lg bg-[#2b003e] text-[#5dc628] flex items-center justify-center font-bold">
+                  <History className="w-4 h-4" />
+                </div>
+                <h3 className="text-xl font-extrabold text-[#2b003e]">Añadir Referencia Histórica (RF-03)</h3>
+              </div>
+              <p className="text-xs text-slate-500 mt-1">
+                Alimenta los valores paramétricos (O, M, P) con horas de proyectos anteriores de <strong>Dominio Estudio</strong>.
+              </p>
+            </div>
 
-            <form onSubmit={handleSaveReference} className="space-y-4">
-              <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase mb-1">
-                  Proyecto de Origen *
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={refForm.proyecto_origen}
-                  onChange={(e) => setRefForm({ ...refForm, proyecto_origen: e.target.value })}
-                  placeholder="Ej: Portal Institucional ISER 2025"
-                  className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                />
+            <form onSubmit={handleSaveReference} className="space-y-4 pt-2">
+              {/* CAMPO SOLICITADO: Desplegable de PROYECTO DE ORIGEN * con opciones de selección */}
+              <div className="space-y-1.5">
+                <div className="flex items-center justify-between">
+                  <label className="block text-xs font-extrabold text-slate-800 uppercase tracking-wide">
+                    PROYECTO DE ORIGEN *
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setCustomProjectInput(!customProjectInput);
+                      if (!customProjectInput) {
+                        setRefForm({ ...refForm, proyecto_origen: '' });
+                      } else {
+                        setRefForm({ ...refForm, proyecto_origen: historicalProjects[0] || '' });
+                      }
+                    }}
+                    className="text-[11px] font-bold text-[#2b003e] hover:text-[#5dc628] underline transition-colors"
+                  >
+                    {customProjectInput ? '← Seleccionar de la lista' : '+ Escribir otro proyecto'}
+                  </button>
+                </div>
+
+                {!customProjectInput ? (
+                  /* Selector desplegable de proyectos históricos reales de Dominio Estudio */
+                  <div className="relative">
+                    <select
+                      required
+                      value={refForm.proyecto_origen}
+                      onChange={(e) => {
+                        if (e.target.value === '__NEW__') {
+                          setCustomProjectInput(true);
+                          setRefForm({ ...refForm, proyecto_origen: '' });
+                        } else {
+                          setRefForm({ ...refForm, proyecto_origen: e.target.value });
+                        }
+                      }}
+                      className="w-full px-3.5 py-2.5 text-sm font-semibold border-2 border-purple-200 rounded-xl bg-purple-50/50 text-[#2b003e] focus:bg-white focus:border-[#2b003e] focus:outline-none transition-all cursor-pointer"
+                    >
+                      <option value="" disabled>-- Seleccione un proyecto histórico de Dominio Estudio --</option>
+                      {historicalProjects.map((proj) => (
+                        <option key={proj} value={proj}>
+                          {proj}
+                        </option>
+                      ))}
+                      <option value="__NEW__" className="font-bold text-[#5dc628] bg-slate-900">
+                        + Escribir otro proyecto personalizado...
+                      </option>
+                    </select>
+                    <span className="text-[10px] text-slate-400 block mt-1">
+                      Opciones tomadas de las estimaciones y propuestas históricas de la empresa.
+                    </span>
+                  </div>
+                ) : (
+                  /* Campo de texto libre con sugerencias automáticas (datalist) */
+                  <div>
+                    <input
+                      type="text"
+                      required
+                      autoFocus
+                      list="historical-projects-datalist"
+                      value={refForm.proyecto_origen}
+                      onChange={(e) => setRefForm({ ...refForm, proyecto_origen: e.target.value })}
+                      placeholder="Ej: Portal Institucional ISER 2025"
+                      className="w-full px-3.5 py-2.5 text-sm border-2 border-[#2b003e] rounded-xl focus:ring-2 focus:ring-[#5dc628] focus:outline-none"
+                    />
+                    <datalist id="historical-projects-datalist">
+                      {historicalProjects.map((p) => (
+                        <option key={p} value={p} />
+                      ))}
+                    </datalist>
+                    <span className="text-[10px] text-slate-500 block mt-1">
+                      Escriba el nombre exacto del proyecto anterior.
+                    </span>
+                  </div>
+                )}
               </div>
 
+              {/* Horas y Tipo de Dato */}
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Horas *</label>
+                  <label className="block text-xs font-extrabold text-slate-800 uppercase tracking-wide mb-1">
+                    HORAS *
+                  </label>
                   <input
                     type="number"
                     step="0.5"
@@ -671,45 +791,53 @@ export default function CatalogView() {
                     value={refForm.horas}
                     onChange={(e) => setRefForm({ ...refForm, horas: e.target.value })}
                     placeholder="Ej: 14"
-                    className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                    className="w-full px-3.5 py-2.5 text-sm border border-slate-300 rounded-xl focus:ring-2 focus:ring-[#2b003e] focus:outline-none font-bold"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Tipo de Dato *</label>
+                  <label className="block text-xs font-extrabold text-slate-800 uppercase tracking-wide mb-1">
+                    TIPO DE DATO *
+                  </label>
                   <select
                     value={refForm.tipo}
                     onChange={(e) => setRefForm({ ...refForm, tipo: e.target.value })}
-                    className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                    className="w-full px-3.5 py-2.5 text-sm border border-slate-300 rounded-xl bg-white focus:ring-2 focus:ring-[#2b003e] focus:outline-none font-semibold text-slate-800"
                   >
                     <option value="real">Horas Reales (Ejecutadas)</option>
-                    <option value="estimada">Horas Estimadas (Propuesta previa)</option>
+                    <option value="estimada">Horas Estimadas (Propuesta)</option>
                   </select>
                 </div>
               </div>
 
+              {/* Notas u Observaciones */}
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Notas / Observaciones</label>
+                <label className="block text-xs font-extrabold text-slate-800 uppercase tracking-wide mb-1">
+                  NOTAS / OBSERVACIONES
+                </label>
                 <input
                   type="text"
                   value={refForm.notas}
                   onChange={(e) => setRefForm({ ...refForm, notas: e.target.value })}
                   placeholder="Condiciones específicas o contexto del proyecto..."
-                  className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  className="w-full px-3.5 py-2.5 text-sm border border-slate-300 rounded-xl focus:ring-2 focus:ring-[#2b003e] focus:outline-none"
                 />
               </div>
 
-              <div className="flex justify-end gap-2 pt-2">
+              <div className="flex justify-end items-center gap-3 pt-3 border-t border-slate-100">
                 <button
                   type="button"
-                  onClick={() => setShowRefModal(false)}
-                  className="px-4 py-2 text-sm text-slate-600 hover:bg-slate-100 rounded-lg font-medium"
+                  onClick={() => {
+                    setShowRefModal(false);
+                    setCustomProjectInput(false);
+                  }}
+                  className="px-4 py-2.5 text-sm text-slate-600 hover:bg-slate-100 rounded-xl font-semibold transition-colors"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold shadow-xs"
+                  className="px-6 py-2.5 text-sm bg-[#2b003e] hover:bg-[#3d0059] text-white rounded-xl font-bold shadow-md shadow-purple-900/20 transition-all hover:scale-[1.02]"
                 >
                   Guardar Referencia
                 </button>

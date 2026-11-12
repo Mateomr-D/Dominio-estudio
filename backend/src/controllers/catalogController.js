@@ -307,15 +307,27 @@ async function deleteHourReference(req, res) {
   }
 }
 
+const { allHistoricalProjectsList } = require('../seeds/initialData');
+
 async function getHistoricalProjects(req, res) {
   try {
     const db = getDb();
-    const projects = await db.query(
+    const dbProjects = await db.query(
       'SELECT DISTINCT proyecto_origen FROM referencias_horas ORDER BY proyecto_origen ASC'
     );
+    const dbProjectNames = dbProjects.map((p) => p.proyecto_origen);
+    const proposalProjects = await db.query(
+      'SELECT DISTINCT nombre FROM propuestas ORDER BY nombre ASC'
+    );
+    const proposalNames = proposalProjects.map((p) => p.nombre);
+
+    const combined = Array.from(
+      new Set([...(allHistoricalProjectsList || []), ...dbProjectNames, ...proposalNames])
+    ).filter(Boolean).sort();
+
     res.json({
       success: true,
-      data: projects.map((p) => p.proyecto_origen)
+      data: combined
     });
   } catch (error) {
     console.error('Error en getHistoricalProjects:', error);

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Navbar from './components/Navbar';
+import Footer from './components/Footer';
 import ProposalsList from './components/ProposalsList';
 import CatalogView from './components/CatalogView';
 import EstimationMatrix from './components/EstimationMatrix';
@@ -37,9 +38,9 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col justify-between">
+    <div className="min-h-screen bg-slate-50 flex flex-col justify-between font-sans">
       <div>
-        {/* Barra de Navegación */}
+        {/* Barra de Encabezado Oficial Dominio Estudio (Fondo Morado Oscuro) */}
         <Navbar
           activeTab={activeTab === 'matrix' ? 'proposals' : activeTab}
           setActiveTab={(tab) => {
@@ -51,7 +52,7 @@ export default function App() {
           onOpenGuide={() => setShowGuideModal(true)}
         />
 
-        {/* Contenido Principal */}
+        {/* Contenido Principal de la Aplicación */}
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {activeTab === 'matrix' && selectedProposalId ? (
             <EstimationMatrix
@@ -76,18 +77,8 @@ export default function App() {
         </main>
       </div>
 
-      {/* Pie de Página Institucional */}
-      <footer className="border-t border-slate-200 bg-white py-6 mt-12 text-xs text-slate-500">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-3">
-          <div>
-            <span className="font-bold text-slate-700">Dominio Estudio</span> – Prototipo de Estimación de Tareas Técnicas (OE3)
-          </div>
-          <div className="text-center sm:text-right">
-            <span>Trabajo de Grado: Holnaver Dagua Cunda | Asesor: Elkin Rojas</span>
-            <span className="block text-[11px] text-slate-400">Instituto Superior de Educación Rural (ISER) – 2026</span>
-          </div>
-        </div>
-      </footer>
+      {/* Pie de Página Oficial Dominio Estudio (Franja Verde + Fondo Oscuro con Contacto y Redes) */}
+      <Footer />
 
       {/* Modal para Crear Nueva Propuesta */}
       <NewProposalModal

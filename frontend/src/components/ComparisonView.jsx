@@ -2,17 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { api } from '../api/client';
 import {
   BarChart3,
-  TrendingDown,
   Award,
   CheckCircle2,
   AlertCircle,
-  HelpCircle,
   Clock,
   Layers,
   Sparkles,
-  FileText,
-  Sliders,
-  ArrowRight
+  ArrowRight,
+  TrendingDown
 } from 'lucide-react';
 
 export default function ComparisonView({ targetProposalId, onSelectProposal }) {
@@ -24,7 +21,6 @@ export default function ComparisonView({ targetProposalId, onSelectProposal }) {
   const [errorMsg, setErrorMsg] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
 
-  // Form para registrar estimación manual y horas reales (RF-10)
   const [manualEstInput, setManualEstInput] = useState('');
   const [realHoursInput, setRealHoursInput] = useState('');
 
@@ -44,11 +40,7 @@ export default function ComparisonView({ targetProposalId, onSelectProposal }) {
       const res = await api.getProposals();
       setProposals(res.data);
       if (!selectedId && res.data.length > 0) {
-        // Seleccionar por defecto la propuesta histórica o la primera
-        const historical = res.data.find(
-          (p) => p.nombre.includes('Caso de Estudio ISER') || p.id === 1
-        );
-        setSelectedId(historical ? historical.id : res.data[0].id);
+        setSelectedId(res.data[0].id);
       }
     } catch (err) {
       setErrorMsg(err.message);
@@ -95,7 +87,6 @@ export default function ComparisonView({ targetProposalId, onSelectProposal }) {
   const compReal = comp.comparacion_real;
   const compManual = comp.comparacion_manual;
 
-  // Cálculo de porcentajes para barras de comparación visual
   const maxHours = Math.max(
     totals.total_con_reserva || 0,
     Number(manualEstInput) || 0,
@@ -126,32 +117,32 @@ export default function ComparisonView({ targetProposalId, onSelectProposal }) {
       )}
 
       {/* Cabecera */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-slate-200 shadow-xs">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-slate-200 shadow-xs border-l-4 border-l-[#2b003e]">
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
+            <h1 className="text-2xl font-extrabold text-[#2b003e] tracking-tight">
               Comparación y Validación con Histórico
             </h1>
-            <span className="text-xs bg-purple-100 text-purple-800 font-bold px-2.5 py-1 rounded-full border border-purple-200">
+            <span className="text-xs bg-purple-100 text-[#2b003e] font-extrabold px-2.5 py-1 rounded-full border border-purple-200">
               RF-10 & Sección 10
             </span>
           </div>
-          <p className="text-sm text-slate-500 mt-1">
-            Contraste entre las horas generadas por el prototipo, la estimación manual del personal senior y las horas reales ejecutadas.
+          <p className="text-sm text-slate-600 mt-1">
+            Contraste entre las horas paramétricas generadas por el prototipo, la estimación manual de <strong>Dominio Estudio</strong> y las horas reales registradas.
           </p>
         </div>
 
         {/* Selector de propuesta */}
         <div className="flex items-center gap-2">
-          <span className="text-xs font-bold text-slate-500 uppercase">Propuesta:</span>
+          <span className="text-xs font-bold text-slate-600 uppercase">Propuesta:</span>
           <select
             value={selectedId || ''}
             onChange={(e) => setSelectedId(Number(e.target.value))}
-            className="px-3 py-2 text-xs font-semibold border border-slate-300 rounded-xl bg-white text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="px-3 py-2 text-xs font-bold border-2 border-purple-200 rounded-xl bg-purple-50/50 text-[#2b003e] focus:outline-none focus:border-[#2b003e]"
           >
             {proposals.map((p) => (
               <option key={p.id} value={p.id}>
-                {p.nombre} {p.id === 1 ? '★ (Caso Histórico)' : ''}
+                {p.nombre}
               </option>
             ))}
           </select>
@@ -166,56 +157,56 @@ export default function ComparisonView({ targetProposalId, onSelectProposal }) {
             <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs space-y-6">
               <div className="flex items-center justify-between border-b border-slate-100 pb-3">
                 <div className="flex items-center gap-2">
-                  <BarChart3 className="w-5 h-5 text-blue-600" />
-                  <h2 className="font-bold text-base text-slate-900">
-                    Contraste de Horas: Prototipo vs Manual Senior vs Horas Reales
+                  <BarChart3 className="w-5 h-5 text-[#2b003e]" />
+                  <h2 className="font-extrabold text-base text-slate-900">
+                    Contraste: Prototipo vs Estimación Manual vs Horas Reales
                   </h2>
                 </div>
                 <button
                   onClick={() => onSelectProposal(proposalDetail.id)}
-                  className="text-xs font-semibold text-blue-600 hover:text-blue-800 flex items-center gap-1"
+                  className="text-xs font-bold text-[#2b003e] hover:text-[#5dc628] flex items-center gap-1 transition-colors"
                 >
                   <span>Ver Matriz</span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </button>
               </div>
 
-              {/* Barras de progreso / comparación */}
+              {/* Barras de comparación */}
               <div className="space-y-4">
                 {/* 1. Prototipo */}
                 <div className="space-y-1.5">
                   <div className="flex justify-between text-xs">
-                    <span className="font-bold text-blue-900 flex items-center gap-1.5">
-                      <span className="w-2.5 h-2.5 rounded-full bg-blue-600"></span>
+                    <span className="font-bold text-[#2b003e] flex items-center gap-1.5">
+                      <span className="w-2.5 h-2.5 rounded-full bg-[#2b003e]"></span>
                       Prototipo Paramétrico (PERT Cohn 2005)
                     </span>
-                    <span className="font-mono font-black text-blue-700 text-sm">
+                    <span className="font-mono font-black text-[#2b003e] text-sm">
                       {totals.total_con_reserva || 0} hrs
                     </span>
                   </div>
-                  <div className="w-full bg-slate-100 rounded-full h-3 overflow-hidden">
+                  <div className="w-full bg-slate-100 rounded-full h-3.5 overflow-hidden">
                     <div
-                      className="bg-blue-600 h-full rounded-full transition-all duration-700"
+                      className="bg-[#2b003e] h-full rounded-full transition-all duration-700"
                       style={{ width: `${Math.min(100, ((totals.total_con_reserva || 0) / maxHours) * 100)}%` }}
                     ></div>
                   </div>
-                  <span className="text-[10px] text-slate-400 block">
+                  <span className="text-[10px] text-slate-500 block">
                     Base: {totals.base_total_horas}h + Reserva {totals.reserva_porcentaje}% ({totals.horas_reserva}h) | Rango: ±{totals.desviacion_total}h
                   </span>
                 </div>
 
-                {/* 2. Estimación Manual Senior */}
+                {/* 2. Estimación Manual Dominio Estudio */}
                 <div className="space-y-1.5">
                   <div className="flex justify-between text-xs">
-                    <span className="font-bold text-slate-800 flex items-center gap-1.5">
+                    <span className="font-bold text-amber-900 flex items-center gap-1.5">
                       <span className="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
-                      Estimación Manual Previa (Juicio de Experto Senior)
+                      Estimación Manual de Dominio Estudio (XLSX Histórico)
                     </span>
-                    <span className="font-mono font-black text-slate-800 text-sm">
+                    <span className="font-mono font-black text-amber-800 text-sm">
                       {manualEstInput ? `${manualEstInput} hrs` : 'No registrada'}
                     </span>
                   </div>
-                  <div className="w-full bg-slate-100 rounded-full h-3 overflow-hidden">
+                  <div className="w-full bg-slate-100 rounded-full h-3.5 overflow-hidden">
                     <div
                       className="bg-amber-500 h-full rounded-full transition-all duration-700"
                       style={{ width: `${Math.min(100, ((Number(manualEstInput) || 0) / maxHours) * 100)}%` }}
@@ -233,26 +224,26 @@ export default function ComparisonView({ targetProposalId, onSelectProposal }) {
                 {/* 3. Horas Reales */}
                 <div className="space-y-1.5">
                   <div className="flex justify-between text-xs">
-                    <span className="font-bold text-emerald-900 flex items-center gap-1.5">
-                      <span className="w-2.5 h-2.5 rounded-full bg-emerald-600"></span>
-                      Horas Reales Ejecutadas (Dato Final del Proyecto)
+                    <span className="font-bold text-emerald-950 flex items-center gap-1.5">
+                      <span className="w-2.5 h-2.5 rounded-full bg-[#5dc628]"></span>
+                      Horas Reales Ejecutadas (Proyecto Finalizado)
                     </span>
                     <span className="font-mono font-black text-emerald-800 text-sm">
                       {realHoursInput ? `${realHoursInput} hrs` : 'Pendiente / En ejecución'}
                     </span>
                   </div>
-                  <div className="w-full bg-slate-100 rounded-full h-3 overflow-hidden">
+                  <div className="w-full bg-slate-100 rounded-full h-3.5 overflow-hidden">
                     <div
-                      className="bg-emerald-600 h-full rounded-full transition-all duration-700"
+                      className="bg-[#5dc628] h-full rounded-full transition-all duration-700"
                       style={{ width: `${Math.min(100, ((Number(realHoursInput) || 0) / maxHours) * 100)}%` }}
                     ></div>
                   </div>
                   {compReal ? (
-                    <span className="text-[10px] text-emerald-700 font-semibold block">
-                      Diferencia con Horas Reales: {compReal.diferencia_horas > 0 ? `+${compReal.diferencia_horas}h` : `${compReal.diferencia_horas}h`} ({compReal.diferencia_porcentaje}%)
+                    <span className="text-[10px] text-emerald-700 font-bold block">
+                      Diferencia vs Real: {compReal.diferencia_horas > 0 ? `+${compReal.diferencia_horas}h` : `${compReal.diferencia_horas}h`} ({compReal.diferencia_porcentaje}%)
                     </span>
                   ) : (
-                    <span className="text-[10px] text-slate-400 block">Disponible una vez finalizado el proyecto</span>
+                    <span className="text-[10px] text-slate-400 block">Disponible una vez concluido el proyecto</span>
                   )}
                 </div>
               </div>
@@ -260,10 +251,10 @@ export default function ComparisonView({ targetProposalId, onSelectProposal }) {
 
             {/* Tarjetas de Cálculo MRE (Fórmula Sección 10) */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
+              <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs border-b-4 border-b-[#2b003e]">
                 <span className="text-xs font-bold text-slate-500 uppercase block">Error Relativo (MRE)</span>
                 <div className="mt-2 flex items-baseline gap-2">
-                  <span className="text-2xl font-black text-blue-700">
+                  <span className="text-2xl font-black text-[#2b003e]">
                     {compReal ? `${compReal.mre_porcentaje}%` : 'N/A'}
                   </span>
                   <span className="text-xs text-slate-400">
@@ -275,7 +266,7 @@ export default function ComparisonView({ targetProposalId, onSelectProposal }) {
                 </p>
               </div>
 
-              <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
+              <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs border-b-4 border-b-amber-500">
                 <span className="text-xs font-bold text-slate-500 uppercase block">MRE Estimación Manual</span>
                 <div className="mt-2 flex items-baseline gap-2">
                   <span className="text-2xl font-black text-amber-700">
@@ -285,14 +276,14 @@ export default function ComparisonView({ targetProposalId, onSelectProposal }) {
                   </span>
                 </div>
                 <p className="text-[11px] text-slate-500 mt-1">
-                  MRE Senior = |real − manual| / real
+                  MRE Manual = |real − manual| / real
                 </p>
               </div>
 
-              <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
+              <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs border-b-4 border-b-[#5dc628]">
                 <span className="text-xs font-bold text-slate-500 uppercase block">Precisión del Prototipo</span>
                 <div className="mt-2 flex items-baseline gap-2">
-                  <span className="text-2xl font-black text-emerald-700">
+                  <span className="text-2xl font-black text-[#5dc628]">
                     {compReal ? `${compReal.precision}%` : 'N/A'}
                   </span>
                 </div>
@@ -302,10 +293,10 @@ export default function ComparisonView({ targetProposalId, onSelectProposal }) {
               </div>
             </div>
 
-            {/* Desglose por Componente de la Solución */}
+            {/* Desglose por Componente */}
             <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
-              <h3 className="font-bold text-sm text-slate-900 mb-3 flex items-center gap-2">
-                <Layers className="w-4 h-4 text-blue-600" />
+              <h3 className="font-extrabold text-sm text-[#2b003e] mb-3 flex items-center gap-2">
+                <Layers className="w-4 h-4 text-[#5dc628]" />
                 <span>Distribución de Horas por Componente</span>
               </h3>
 
@@ -324,13 +315,13 @@ export default function ComparisonView({ targetProposalId, onSelectProposal }) {
                             ({compItem.complejidad}, f={compItem.factor_f})
                           </span>
                         </span>
-                        <span className="font-mono font-bold text-slate-700">
+                        <span className="font-mono font-bold text-[#2b003e]">
                           {compItem.subtotal_horas}h ({pct}%)
                         </span>
                       </div>
                       <div className="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
                         <div
-                          className="bg-blue-500 h-full rounded-full"
+                          className="bg-[#2b003e] h-full rounded-full"
                           style={{ width: `${pct}%` }}
                         ></div>
                       </div>
@@ -344,11 +335,11 @@ export default function ComparisonView({ targetProposalId, onSelectProposal }) {
           {/* Columna Derecha: Formulario de Actualización y Registro (RF-10) */}
           <div className="space-y-6">
             <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs">
-              <h3 className="font-bold text-base text-slate-900 mb-1">
+              <h3 className="font-extrabold text-base text-[#2b003e] mb-1">
                 Registrar Datos de Contraste (RF-10)
               </h3>
               <p className="text-xs text-slate-500 mb-4">
-                Permite registrar la estimación que el personal senior calculó de manera manual y las horas reales registradas al finalizar.
+                Permite registrar la estimación manual senior y las horas reales ejecutadas para evaluar la precisión del modelo.
               </p>
 
               <form onSubmit={handleSaveComparison} className="space-y-4">
@@ -360,13 +351,13 @@ export default function ComparisonView({ targetProposalId, onSelectProposal }) {
                     type="number"
                     step="0.5"
                     min="1"
-                    placeholder="Ej: 210"
+                    placeholder="Ej: 572"
                     value={manualEstInput}
                     onChange={(e) => setManualEstInput(e.target.value)}
-                    className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                    className="w-full px-3.5 py-2.5 text-sm border border-slate-300 rounded-xl focus:ring-2 focus:ring-[#2b003e] focus:outline-none font-bold"
                   />
                   <span className="text-[10px] text-slate-400 block mt-1">
-                    Cifra estimada con juicio de expertos antes de usar el prototipo.
+                    Cifra estimada con juicio manual antes del uso del prototipo.
                   </span>
                 </div>
 
@@ -378,20 +369,20 @@ export default function ComparisonView({ targetProposalId, onSelectProposal }) {
                     type="number"
                     step="0.5"
                     min="1"
-                    placeholder="Ej: 232.5"
+                    placeholder="Ej: 588"
                     value={realHoursInput}
                     onChange={(e) => setRealHoursInput(e.target.value)}
-                    className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                    className="w-full px-3.5 py-2.5 text-sm border border-slate-300 rounded-xl focus:ring-2 focus:ring-[#2b003e] focus:outline-none font-bold text-emerald-800"
                   />
                   <span className="text-[10px] text-slate-400 block mt-1">
-                    Horas efectivas registradas en los partes de trabajo de la empresa.
+                    Horas efectivas registradas tras la finalización del proyecto.
                   </span>
                 </div>
 
                 <button
                   type="submit"
                   disabled={saving}
-                  className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold shadow-xs transition-colors disabled:opacity-50"
+                  className="w-full py-2.5 bg-[#2b003e] hover:bg-[#3d0059] text-white rounded-xl text-xs font-bold shadow-md shadow-purple-900/20 transition-all hover:scale-[1.01] disabled:opacity-50"
                 >
                   {saving ? 'Guardando...' : 'Actualizar Comparación y Recalcular MRE'}
                 </button>
@@ -399,25 +390,25 @@ export default function ComparisonView({ targetProposalId, onSelectProposal }) {
             </div>
 
             {/* Hallazgo y Resumen según Trabajo de Grado */}
-            <div className="bg-indigo-50/70 p-5 rounded-2xl border border-indigo-100 text-xs text-indigo-950 space-y-3">
+            <div className="bg-purple-50/70 p-5 rounded-2xl border border-purple-100 text-xs text-[#2b003e] space-y-3">
               <div className="flex items-center gap-2">
-                <Award className="w-5 h-5 text-indigo-600" />
-                <h4 className="font-bold text-sm">Conclusión de Validación ISER</h4>
+                <Award className="w-5 h-5 text-[#5dc628]" />
+                <h4 className="font-extrabold text-sm">Conclusión de Validación ISER</h4>
               </div>
               <p className="text-slate-600 leading-relaxed">
-                El prototipo combina la descomposición en componentes del catálogo, el rango paramétrico de tres valores (PERT) y las horas históricas previas de Dominio Estudio.
+                El prototipo combina la descomposición en componentes del catálogo, el rango paramétrico de tres valores (PERT) y las horas históricas reales de <strong>Dominio Estudio</strong>.
               </p>
               <div className="space-y-1.5 pt-1 text-[11px] text-slate-700">
                 <div className="flex items-center gap-1.5">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 flex-shrink-0" />
+                  <CheckCircle2 className="w-4 h-4 text-[#5dc628] flex-shrink-0" />
                   <span>Reduce la dependencia y carga sobre el personal senior.</span>
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 flex-shrink-0" />
-                  <span>Disminuye el tiempo de preparación de la matriz de horas.</span>
+                  <CheckCircle2 className="w-4 h-4 text-[#5dc628] flex-shrink-0" />
+                  <span>Disminuye el tiempo de preparación de la matriz de horas en más del 85%.</span>
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 flex-shrink-0" />
+                  <CheckCircle2 className="w-4 h-4 text-[#5dc628] flex-shrink-0" />
                   <span>Aporta trazabilidad y auditoría a cada cifra calculada.</span>
                 </div>
               </div>

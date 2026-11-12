@@ -56,7 +56,6 @@ export default function EstimationMatrix({ proposalId, onBack, onOpenComparison 
     }
   }
 
-  // Cambiar complejidad de un componente (RF-06)
   async function handleComplexityChange(propCompId, newComplexity) {
     try {
       await api.updateComponentComplexity(proposalId, propCompId, newComplexity);
@@ -67,7 +66,6 @@ export default function EstimationMatrix({ proposalId, onBack, onOpenComparison 
     }
   }
 
-  // Quitar componente de la solución (RF-05)
   async function handleRemoveComponent(propCompId) {
     if (!confirm('¿Confirma remover este componente de la estimación de la propuesta?')) return;
     try {
@@ -79,11 +77,9 @@ export default function EstimationMatrix({ proposalId, onBack, onOpenComparison 
     }
   }
 
-  // Abrir modal para añadir nuevo componente a la solución
   async function handleOpenAddCompModal() {
     try {
       const res = await api.getComponents(false);
-      // Filtrar los que ya están en la propuesta
       const currentIds = (proposal?.componentes || []).map((c) => c.componente_id);
       const available = res.data.filter((c) => !currentIds.includes(c.id));
       setCatalogComponents(available);
@@ -96,7 +92,6 @@ export default function EstimationMatrix({ proposalId, onBack, onOpenComparison 
     }
   }
 
-  // Guardar componente añadido
   async function handleAddComponent(e) {
     e.preventDefault();
     if (!selectedCompToAdd) return;
@@ -110,7 +105,6 @@ export default function EstimationMatrix({ proposalId, onBack, onOpenComparison 
     }
   }
 
-  // Abrir modal de edición manual con justificación (RF-09)
   function handleOpenManualEdit(task, comp) {
     setEditingTask({ ...task, compNombre: comp.nombre, factor_f: comp.factor_f });
     setManualHours(task.horas_ajustadas || task.horas_esperadas);
@@ -118,7 +112,6 @@ export default function EstimationMatrix({ proposalId, onBack, onOpenComparison 
     setShowEditModal(true);
   }
 
-  // Guardar edición manual (RF-09)
   async function handleSaveManualEdit(e) {
     e.preventDefault();
     if (!editingTask) return;
@@ -133,7 +126,6 @@ export default function EstimationMatrix({ proposalId, onBack, onOpenComparison 
     }
   }
 
-  // Restablecer edición manual a PERT original
   async function handleResetManualEdit(propTaskId) {
     if (!confirm('¿Desea restablecer esta tarea a su cálculo paramétrico PERT original?')) return;
     try {
@@ -148,7 +140,7 @@ export default function EstimationMatrix({ proposalId, onBack, onOpenComparison 
   if (loading) {
     return (
       <div className="p-12 text-center text-slate-500 bg-white rounded-2xl border border-slate-200">
-        Cargando matriz de estimación...
+        Cargando matriz de estimación de Dominio Estudio...
       </div>
     );
   }
@@ -165,7 +157,13 @@ export default function EstimationMatrix({ proposalId, onBack, onOpenComparison 
   }
 
   const totals = proposal.totales || {};
-  const isHistoricalCase = proposal.nombre.includes('Caso de Estudio ISER') || proposal.id === 1;
+  const isHistoricalCase =
+    proposal.nombre.includes('ICBF') ||
+    proposal.nombre.includes('Green List') ||
+    proposal.nombre.includes('WhatsApp') ||
+    proposal.nombre.includes('Entidades Financieras') ||
+    proposal.nombre.includes('Famisanar') ||
+    proposal.nombre.includes('ISER');
 
   return (
     <div className="space-y-6">
@@ -193,7 +191,7 @@ export default function EstimationMatrix({ proposalId, onBack, onOpenComparison 
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <button
           onClick={onBack}
-          className="inline-flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-slate-900 bg-white px-3 py-2 rounded-xl border border-slate-200 shadow-xs self-start"
+          className="inline-flex items-center gap-2 text-sm font-bold text-[#2b003e] hover:text-[#5dc628] bg-white px-4 py-2 rounded-xl border border-slate-200 shadow-xs self-start transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Volver al listado de propuestas</span>
@@ -202,19 +200,19 @@ export default function EstimationMatrix({ proposalId, onBack, onOpenComparison 
         <div className="flex flex-wrap items-center gap-2">
           <button
             onClick={() => onOpenComparison(proposal.id)}
-            className="flex items-center gap-2 px-3.5 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 rounded-xl text-xs font-bold shadow-xs transition-colors"
+            className="flex items-center gap-2 px-3.5 py-2 bg-purple-50 hover:bg-purple-100 text-[#2b003e] border border-purple-200 rounded-xl text-xs font-bold shadow-xs transition-colors"
           >
-            <Sparkles className="w-4 h-4 text-indigo-600" />
+            <Sparkles className="w-4 h-4 text-[#5dc628]" />
             <span>Comparar con Histórico (RF-10)</span>
           </button>
 
           <a
             href={api.getExcelExportUrl(proposal.id)}
             download
-            className="flex items-center gap-2 px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold shadow-xs transition-colors"
+            className="flex items-center gap-2 px-3.5 py-2 bg-[#2b003e] hover:bg-[#3d0059] text-white rounded-xl text-xs font-bold shadow-xs transition-colors"
             title="Descargar matriz de estimación en Microsoft Excel (.xlsx)"
           >
-            <FileSpreadsheet className="w-4 h-4" />
+            <FileSpreadsheet className="w-4 h-4 text-[#5dc628]" />
             <span>Exportar Excel (RF-08)</span>
           </a>
 
@@ -231,51 +229,51 @@ export default function EstimationMatrix({ proposalId, onBack, onOpenComparison 
       </div>
 
       {/* Tarjeta de Metadatos de la Propuesta */}
-      <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs space-y-4">
+      <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs space-y-4 border-l-4 border-l-[#2b003e]">
         <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
           <div>
             <div className="flex flex-wrap items-center gap-2">
-              <h1 className="text-2xl font-bold text-slate-900 tracking-tight">{proposal.nombre}</h1>
+              <h1 className="text-2xl font-extrabold text-[#2b003e] tracking-tight">{proposal.nombre}</h1>
               {isHistoricalCase && (
-                <span className="text-xs bg-purple-100 text-purple-800 font-bold px-2.5 py-0.5 rounded-full border border-purple-200">
-                  Caso de Validación ISER (Sección 10)
+                <span className="text-xs bg-purple-100 text-[#2b003e] font-extrabold px-2.5 py-0.5 rounded-full border border-purple-200">
+                  Estimación Histórica Real
                 </span>
               )}
             </div>
             <p className="text-sm text-slate-600 mt-1">
-              Cliente: <span className="font-semibold text-slate-800">{proposal.referencia_cliente}</span> | Tecnologías: <span className="font-semibold text-slate-800">{proposal.tecnologias}</span>
+              Cliente: <span className="font-bold text-slate-800">{proposal.referencia_cliente}</span> | Tecnologías: <span className="font-semibold text-slate-800">{proposal.tecnologias}</span>
             </p>
           </div>
 
           <button
             onClick={handleOpenAddCompModal}
-            className="flex items-center gap-1.5 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold shadow-xs self-start"
+            className="flex items-center gap-1.5 px-4 py-2 bg-[#2b003e] hover:bg-[#3d0059] text-white rounded-xl text-xs font-bold shadow-xs self-start transition-all hover:scale-[1.02]"
           >
-            <Plus className="w-4 h-4" />
+            <Plus className="w-4 h-4 text-[#5dc628]" />
             <span>+ Agregar Componente (RF-05)</span>
           </button>
         </div>
 
         {/* Cajas de métricas clave */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
-          <div className="bg-blue-50/70 p-3.5 rounded-xl border border-blue-100">
-            <span className="text-[11px] font-bold text-blue-700 uppercase block">Horas Base PERT</span>
-            <span className="text-xl font-extrabold text-blue-900">{totals.base_total_horas || 0} hrs</span>
-            <span className="text-[10px] text-blue-600 block mt-0.5">Suma H de componentes</span>
+          <div className="bg-purple-50/60 p-3.5 rounded-xl border border-purple-100">
+            <span className="text-[11px] font-bold text-slate-600 uppercase block">Horas Base PERT</span>
+            <span className="text-xl font-extrabold text-[#2b003e]">{totals.base_total_horas || 0} hrs</span>
+            <span className="text-[10px] text-slate-500 block mt-0.5">Suma H de componentes</span>
           </div>
 
           <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
-            <span className="text-[11px] font-bold text-slate-600 uppercase block">Reserva de Contingencia</span>
+            <span className="text-[11px] font-bold text-slate-600 uppercase block">Reserva Contingencia</span>
             <span className="text-xl font-extrabold text-slate-800">
               +{totals.horas_reserva || 0} hrs
             </span>
             <span className="text-[10px] text-slate-500 block mt-0.5">{totals.reserva_porcentaje}% configurable</span>
           </div>
 
-          <div className="bg-gradient-to-tr from-blue-700 to-indigo-700 text-white p-3.5 rounded-xl shadow-xs">
-            <span className="text-[11px] font-bold text-blue-200 uppercase block">TOTAL ESTIMADO FINAL</span>
+          <div className="bg-[#2b003e] text-white p-3.5 rounded-xl shadow-md shadow-purple-900/20">
+            <span className="text-[11px] font-bold text-[#5dc628] uppercase block">TOTAL ESTIMADO FINAL</span>
             <span className="text-xl font-black">{totals.total_con_reserva || 0} hrs</span>
-            <span className="text-[10px] text-blue-200 block mt-0.5">Base + Reserva</span>
+            <span className="text-[10px] text-purple-200 block mt-0.5">Base + Reserva</span>
           </div>
 
           <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
@@ -292,13 +290,13 @@ export default function EstimationMatrix({ proposalId, onBack, onOpenComparison 
       <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
         <div className="p-4 bg-slate-50 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div className="flex items-center gap-2">
-            <Layers className="w-4 h-4 text-blue-600" />
+            <Layers className="w-4 h-4 text-[#2b003e]" />
             <h2 className="text-sm font-bold text-slate-900">
               Desglose de Componentes, Tareas Técnicas y Factores de Complejidad (RF-06, RF-07, RF-09)
             </h2>
           </div>
           <div className="text-xs text-slate-500">
-            Fórmula PERT: <span className="font-mono font-bold text-slate-700">E = (O + 4M + P) / 6</span> | Ajuste: <span className="font-mono font-bold text-slate-700">H = E × f</span>
+            Fórmula PERT: <span className="font-mono font-bold text-[#2b003e]">E = (O + 4M + P) / 6</span> | Ajuste: <span className="font-mono font-bold text-[#2b003e]">H = E × f</span>
           </div>
         </div>
 
@@ -307,7 +305,7 @@ export default function EstimationMatrix({ proposalId, onBack, onOpenComparison 
             <p>La propuesta aún no tiene componentes seleccionados del catálogo.</p>
             <button
               onClick={handleOpenAddCompModal}
-              className="px-4 py-2 bg-blue-600 text-white rounded-xl text-xs font-semibold"
+              className="px-4 py-2 bg-[#2b003e] text-white rounded-xl text-xs font-semibold"
             >
               Armar Solución con Componentes
             </button>
@@ -317,11 +315,11 @@ export default function EstimationMatrix({ proposalId, onBack, onOpenComparison 
             {totals.componentes.map((comp) => (
               <div key={comp.id} className="p-5 space-y-4">
                 {/* Cabecera del Componente en la Matriz */}
-                <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 bg-slate-50 p-4 rounded-xl border border-slate-200">
+                <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 bg-purple-50/30 p-4 rounded-xl border border-purple-100">
                   <div>
                     <div className="flex items-center gap-2">
-                      <h3 className="font-bold text-base text-slate-900">{comp.nombre}</h3>
-                      <span className="text-xs font-medium px-2 py-0.5 rounded-md bg-white border border-slate-200 text-slate-600">
+                      <h3 className="font-extrabold text-base text-[#2b003e]">{comp.nombre}</h3>
+                      <span className="text-xs font-semibold px-2 py-0.5 rounded-md bg-white border border-purple-200 text-[#2b003e]">
                         {comp.categoria}
                       </span>
                     </div>
@@ -342,7 +340,7 @@ export default function EstimationMatrix({ proposalId, onBack, onOpenComparison 
                             ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
                             : comp.complejidad === 'alta'
                             ? 'bg-rose-50 text-rose-800 border-rose-300'
-                            : 'bg-blue-50 text-blue-800 border-blue-300'
+                            : 'bg-purple-50 text-[#2b003e] border-purple-300'
                         }`}
                       >
                         <option value="baja">Baja (f = {proposal.factor_baja})</option>
@@ -353,7 +351,7 @@ export default function EstimationMatrix({ proposalId, onBack, onOpenComparison 
 
                     <div className="bg-white px-3 py-1.5 rounded-lg border border-slate-200 text-xs">
                       <span className="text-slate-400 text-[10px] block font-bold uppercase">Subtotal</span>
-                      <span className="font-black text-slate-900 text-sm">{comp.subtotal_horas} hrs</span>
+                      <span className="font-black text-[#2b003e] text-sm">{comp.subtotal_horas} hrs</span>
                     </div>
 
                     <button
@@ -376,7 +374,7 @@ export default function EstimationMatrix({ proposalId, onBack, onOpenComparison 
                         <th className="py-2.5 px-2 text-right">O</th>
                         <th className="py-2.5 px-2 text-right">M</th>
                         <th className="py-2.5 px-2 text-right">P</th>
-                        <th className="py-2.5 px-2 text-right text-blue-700">PERT (E)</th>
+                        <th className="py-2.5 px-2 text-right text-[#2b003e] font-bold">PERT (E)</th>
                         <th className="py-2.5 px-2 text-right font-black text-slate-900">Ajustadas (H)</th>
                         <th className="py-2.5 px-2 text-right">±σ</th>
                         <th className="py-2.5 px-3 text-center">Trazabilidad / Edición</th>
@@ -409,7 +407,7 @@ export default function EstimationMatrix({ proposalId, onBack, onOpenComparison 
                             <td className="py-3 px-2 text-right font-mono text-slate-600">{tarea.O}</td>
                             <td className="py-3 px-2 text-right font-mono text-slate-600">{tarea.M}</td>
                             <td className="py-3 px-2 text-right font-mono text-slate-600">{tarea.P}</td>
-                            <td className="py-3 px-2 text-right font-mono font-bold text-blue-700">
+                            <td className="py-3 px-2 text-right font-mono font-bold text-[#2b003e]">
                               {tarea.horas_esperadas}
                             </td>
                             <td className="py-3 px-2 text-right font-mono font-black text-slate-900 text-sm">
@@ -423,7 +421,7 @@ export default function EstimationMatrix({ proposalId, onBack, onOpenComparison 
                                 <button
                                   onClick={() => setTraceabilityTask(tarea)}
                                   title="Ver origen y referencias históricas (RNF Trazabilidad)"
-                                  className="p-1 text-slate-500 hover:text-blue-700 hover:bg-blue-50 rounded-md"
+                                  className="p-1 text-slate-500 hover:text-[#2b003e] hover:bg-purple-50 rounded-md"
                                 >
                                   <Info className="w-3.5 h-3.5" />
                                 </button>
@@ -434,7 +432,7 @@ export default function EstimationMatrix({ proposalId, onBack, onOpenComparison 
                                   className={`p-1 rounded-md transition-colors ${
                                     isEdited
                                       ? 'text-amber-700 hover:bg-amber-100'
-                                      : 'text-slate-400 hover:text-blue-600 hover:bg-slate-100'
+                                      : 'text-slate-400 hover:text-[#2b003e] hover:bg-slate-100'
                                   }`}
                                 >
                                   <Edit3 className="w-3.5 h-3.5" />
@@ -465,11 +463,11 @@ export default function EstimationMatrix({ proposalId, onBack, onOpenComparison 
 
       {/* Modal Añadir Componente (RF-05) */}
       {showAddCompModal && (
-        <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl border border-slate-200">
-            <h3 className="text-lg font-bold text-slate-900 mb-1">Incorporar Componente a la Solución</h3>
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-xl border border-slate-200">
+            <h3 className="text-lg font-bold text-[#2b003e] mb-1">Incorporar Componente a la Solución</h3>
             <p className="text-xs text-slate-500 mb-4">
-              Seleccione un componente del catálogo validado para sumar sus tareas técnicas a la matriz.
+              Seleccione un componente del catálogo de Dominio Estudio para sumar sus tareas técnicas a la matriz.
             </p>
 
             {catalogComponents.length === 0 ? (
@@ -483,7 +481,7 @@ export default function EstimationMatrix({ proposalId, onBack, onOpenComparison 
                   <select
                     value={selectedCompToAdd}
                     onChange={(e) => setSelectedCompToAdd(e.target.value)}
-                    className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                    className="w-full px-3 py-2.5 text-sm border border-slate-300 rounded-xl bg-white focus:ring-2 focus:ring-[#2b003e] focus:outline-none font-semibold text-slate-800"
                   >
                     {catalogComponents.map((c) => (
                       <option key={c.id} value={c.id}>
@@ -500,7 +498,7 @@ export default function EstimationMatrix({ proposalId, onBack, onOpenComparison 
                   <select
                     value={newCompComplexity}
                     onChange={(e) => setNewCompComplexity(e.target.value)}
-                    className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                    className="w-full px-3 py-2.5 text-sm border border-slate-300 rounded-xl bg-white focus:ring-2 focus:ring-[#2b003e] focus:outline-none"
                   >
                     <option value="baja">Baja (Factor {proposal.factor_baja})</option>
                     <option value="media">Media (Factor {proposal.factor_media})</option>
@@ -512,13 +510,13 @@ export default function EstimationMatrix({ proposalId, onBack, onOpenComparison 
                   <button
                     type="button"
                     onClick={() => setShowAddCompModal(false)}
-                    className="px-4 py-2 text-sm text-slate-600 hover:bg-slate-100 rounded-lg font-medium"
+                    className="px-4 py-2 text-sm text-slate-600 hover:bg-slate-100 rounded-xl font-medium"
                   >
                     Cancelar
                   </button>
                   <button
                     type="submit"
-                    className="px-4 py-2 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold shadow-xs"
+                    className="px-5 py-2 text-sm bg-[#2b003e] hover:bg-[#3d0059] text-white rounded-xl font-bold shadow-xs"
                   >
                     Incorporar a la Solución
                   </button>
@@ -531,26 +529,26 @@ export default function EstimationMatrix({ proposalId, onBack, onOpenComparison 
 
       {/* Modal Edición Manual con Justificación (RF-09) */}
       {showEditModal && editingTask && (
-        <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl border border-slate-200">
-            <h3 className="text-lg font-bold text-slate-900 mb-1">Edición Manual de Horas (RF-09)</h3>
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-xl border border-slate-200">
+            <h3 className="text-lg font-bold text-[#2b003e] mb-1">Edición Manual de Horas (RF-09)</h3>
             <p className="text-xs text-slate-500 mb-4">
               El prototipo es un apoyo a la decisión. Toda cifra modificada requiere justificación explícita para trazabilidad técnica.
             </p>
 
             <form onSubmit={handleSaveManualEdit} className="space-y-4">
-              <div className="bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs space-y-1">
+              <div className="bg-purple-50/50 p-3.5 rounded-xl border border-purple-100 text-xs space-y-1">
                 <div>
-                  <span className="text-slate-400">Tarea: </span>
-                  <span className="font-bold text-slate-800">{editingTask.nombre}</span>
+                  <span className="text-slate-500">Tarea: </span>
+                  <span className="font-bold text-slate-900">{editingTask.nombre}</span>
                 </div>
                 <div>
-                  <span className="text-slate-400">Componente: </span>
-                  <span className="font-semibold text-slate-700">{editingTask.compNombre}</span>
+                  <span className="text-slate-500">Componente: </span>
+                  <span className="font-semibold text-slate-800">{editingTask.compNombre}</span>
                 </div>
                 <div>
-                  <span className="text-slate-400">Horas PERT Calculadas: </span>
-                  <span className="font-mono font-bold text-blue-700">{editingTask.horas_esperadas} hrs</span> (con factor f={editingTask.factor_f})
+                  <span className="text-slate-500">Horas PERT Calculadas: </span>
+                  <span className="font-mono font-bold text-[#2b003e]">{editingTask.horas_esperadas} hrs</span> (con factor f={editingTask.factor_f})
                 </div>
               </div>
 
@@ -565,7 +563,7 @@ export default function EstimationMatrix({ proposalId, onBack, onOpenComparison 
                   required
                   value={manualHours}
                   onChange={(e) => setManualHours(e.target.value)}
-                  className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  className="w-full px-3.5 py-2.5 text-sm border border-slate-300 rounded-xl focus:ring-2 focus:ring-[#2b003e] focus:outline-none font-bold"
                 />
               </div>
 
@@ -579,8 +577,8 @@ export default function EstimationMatrix({ proposalId, onBack, onOpenComparison 
                   minLength={5}
                   value={manualJustification}
                   onChange={(e) => setManualJustification(e.target.value)}
-                  placeholder="Explique el motivo del ajuste (ej: integración con legacy, reglas complejas, criterio de experto senior)..."
-                  className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  placeholder="Explique el motivo del ajuste (ej: requerimiento estricto del cliente, complejidad de integración)..."
+                  className="w-full px-3.5 py-2.5 text-sm border border-slate-300 rounded-xl focus:ring-2 focus:ring-[#2b003e] focus:outline-none"
                 />
               </div>
 
@@ -588,13 +586,13 @@ export default function EstimationMatrix({ proposalId, onBack, onOpenComparison 
                 <button
                   type="button"
                   onClick={() => setShowEditModal(false)}
-                  className="px-4 py-2 text-sm text-slate-600 hover:bg-slate-100 rounded-lg font-medium"
+                  className="px-4 py-2 text-sm text-slate-600 hover:bg-slate-100 rounded-xl font-medium"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold shadow-xs"
+                  className="px-5 py-2 text-sm bg-[#2b003e] hover:bg-[#3d0059] text-white rounded-xl font-bold shadow-xs"
                 >
                   Guardar Ajuste Manual
                 </button>
@@ -606,12 +604,12 @@ export default function EstimationMatrix({ proposalId, onBack, onOpenComparison 
 
       {/* Modal de Trazabilidad Histórica (RNF) */}
       {traceabilityTask && (
-        <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-xl border border-slate-200 space-y-4">
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-7 shadow-xl border border-slate-200 space-y-4">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <div className="flex items-center gap-2">
-                <Info className="w-5 h-5 text-blue-600" />
-                <h3 className="font-bold text-base text-slate-900">Trazabilidad Técnica de la Cifra</h3>
+                <Info className="w-5 h-5 text-[#5dc628]" />
+                <h3 className="font-extrabold text-base text-[#2b003e]">Trazabilidad Técnica de la Cifra</h3>
               </div>
               <button
                 onClick={() => setTraceabilityTask(null)}
@@ -624,29 +622,29 @@ export default function EstimationMatrix({ proposalId, onBack, onOpenComparison 
             <div className="space-y-3 text-xs">
               <div>
                 <span className="text-slate-400 block uppercase font-bold text-[10px]">Tarea Técnica</span>
-                <span className="font-bold text-slate-800 text-sm">{traceabilityTask.nombre}</span>
+                <span className="font-bold text-slate-900 text-sm">{traceabilityTask.nombre}</span>
               </div>
 
-              <div className="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-1">
-                <div className="font-semibold text-slate-700">Fórmula y Valores Base:</div>
+              <div className="bg-purple-50/50 p-3.5 rounded-xl border border-purple-100 space-y-1">
+                <div className="font-bold text-[#2b003e]">Fórmula y Valores Base:</div>
                 <div className="grid grid-cols-3 gap-2 pt-1 font-mono">
                   <div>O (Optimista): <span className="font-bold">{traceabilityTask.O}h</span></div>
                   <div>M (Probable): <span className="font-bold">{traceabilityTask.M}h</span></div>
                   <div>P (Pesimista): <span className="font-bold">{traceabilityTask.P}h</span></div>
                 </div>
-                <div className="pt-2 text-blue-700">
+                <div className="pt-2 text-[#2b003e] font-semibold">
                   Horas PERT: <span className="font-bold font-mono">({traceabilityTask.O} + 4×{traceabilityTask.M} + {traceabilityTask.P}) / 6 = {traceabilityTask.horas_esperadas}h</span>
                 </div>
               </div>
 
               <div>
-                <span className="text-slate-600 font-bold block mb-1">
-                  Proyectos históricos de referencia que originaron O, M y P:
+                <span className="text-slate-700 font-bold block mb-1">
+                  Proyectos históricos de Dominio Estudio que sustentan O, M y P:
                 </span>
                 {(!traceabilityTask.referencias_historicas || traceabilityTask.referencias_historicas.length === 0) ? (
                   <p className="text-slate-400 italic">Valores base iniciales del equipo técnico.</p>
                 ) : (
-                  <div className="space-y-1.5">
+                  <div className="space-y-1.5 max-h-48 overflow-y-auto">
                     {traceabilityTask.referencias_historicas.map((ref) => (
                       <div
                         key={ref.id}
@@ -654,7 +652,7 @@ export default function EstimationMatrix({ proposalId, onBack, onOpenComparison 
                       >
                         <span className="font-semibold text-slate-800">{ref.proyecto_origen}</span>
                         <div className="flex items-center gap-2">
-                          <span className="font-mono font-bold text-blue-600">{ref.horas} hrs</span>
+                          <span className="font-mono font-bold text-[#2b003e]">{ref.horas} hrs</span>
                           <span
                             className={`px-1.5 py-0.5 rounded text-[9px] font-bold uppercase ${
                               ref.tipo === 'real'
@@ -682,7 +680,7 @@ export default function EstimationMatrix({ proposalId, onBack, onOpenComparison 
             <div className="flex justify-end pt-2 border-t border-slate-100">
               <button
                 onClick={() => setTraceabilityTask(null)}
-                className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-lg text-xs font-semibold"
+                className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-xl text-xs font-bold"
               >
                 Cerrar
               </button>

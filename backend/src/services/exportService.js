@@ -16,16 +16,16 @@ async function generateExcelMatrix(proposalData, totals) {
   });
 
   // Estilos de cabecera institucional Dominio Estudio
-  const brandDarkBlue = '1E3A8A';
-  const brandSoftBlue = 'DBEAFE';
-  const grayLight = 'F3F4F6';
+  const brandPurple = '2B003E';
+  const brandGreen = '5DC628';
+  const grayLight = 'F5EBFA';
 
   // Título
   sheet.mergeCells('A1:M1');
   const titleCell = sheet.getCell('A1');
   titleCell.value = 'DOMINIO ESTUDIO - MATRIZ DE ESTIMACIÓN DE TAREAS TÉCNICAS';
   titleCell.font = { name: 'Arial', size: 14, bold: true, color: { argb: 'FFFFFF' } };
-  titleCell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: brandDarkBlue } };
+  titleCell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: brandPurple } };
   titleCell.alignment = { horizontal: 'center', vertical: 'middle' };
   sheet.getRow(1).height = 30;
 
@@ -78,7 +78,7 @@ async function generateExcelMatrix(proposalData, totals) {
 
   headerRow.eachCell((cell) => {
     cell.font = { name: 'Arial', size: 10, bold: true, color: { argb: 'FFFFFF' } };
-    cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: '2563EB' } };
+    cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: brandPurple } };
     cell.alignment = { horizontal: 'center', vertical: 'middle', wrapText: true };
     cell.border = {
       top: { style: 'thin' },
@@ -172,12 +172,12 @@ async function generateExcelMatrix(proposalData, totals) {
 
   sheet.getCell(`J${summaryStart + 2}`).value = 'TOTAL ESTIMADO:';
   sheet.getCell(`J${summaryStart + 2}`).font = { bold: true, size: 11, color: { argb: 'FFFFFF' } };
-  sheet.getCell(`J${summaryStart + 2}`).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: brandDarkBlue } };
+  sheet.getCell(`J${summaryStart + 2}`).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: brandPurple } };
 
   sheet.getCell(`K${summaryStart + 2}`).value = totals.total_con_reserva;
   sheet.getCell(`K${summaryStart + 2}`).numFmt = '#,##0.00';
   sheet.getCell(`K${summaryStart + 2}`).font = { bold: true, size: 11, color: { argb: 'FFFFFF' } };
-  sheet.getCell(`K${summaryStart + 2}`).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: brandDarkBlue } };
+  sheet.getCell(`K${summaryStart + 2}`).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: brandPurple } };
 
   sheet.getCell(`L${summaryStart + 2}`).value = `± ${totals.desviacion_total}h (Rango: ${totals.intervalo_total[0]}h a ${totals.intervalo_total[1]}h)`;
   sheet.getCell(`L${summaryStart + 2}`).font = { italic: true };
