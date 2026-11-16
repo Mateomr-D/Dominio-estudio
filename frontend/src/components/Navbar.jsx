@@ -18,19 +18,11 @@ export default function Navbar({ activeTab, setActiveTab, onOpenGuide }) {
           <div className="flex items-center gap-4">
             <button
               onClick={() => setActiveTab('proposals')}
-              className="text-left focus:outline-none"
+              className="text-left focus:outline-none transition-transform hover:scale-102"
+              title="Ir a Propuestas de Desarrollo"
             >
-              <DominioLogo variant="light" size="default" showSubtitle={true} />
+              <DominioLogo variant="light" size="default" showSubtitle={false} />
             </button>
-            <div className="hidden lg:flex items-center gap-1.5 pl-3 border-l border-purple-800/60 text-[11px] font-semibold text-slate-300">
-              <span className="text-[#5dc628]">Elearning</span>
-              <span className="text-purple-400">•</span>
-              <span className="text-slate-300">Drupal</span>
-              <span className="text-purple-400">•</span>
-              <span className="text-slate-300">Apps</span>
-              <span className="text-purple-400">•</span>
-              <span className="text-slate-300">Campus</span>
-            </div>
           </div>
 
           {/* Menú de Navegación del Prototipo */}
